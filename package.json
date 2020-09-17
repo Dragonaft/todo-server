@@ -1,0 +1,31 @@
+{
+  "name": "nodejs-express-mysql-sequelize",
+  "version": "1.0.0",
+  "description": "Node.js API with Node.js, Express, Sequelize and MySQL",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mysql",
+    "restapi"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.1.0",
+    "path": "^0.12.7",
+    "sequelize": "^6.3.5",
+    "sqlite": "^4.0.14"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  }
+}

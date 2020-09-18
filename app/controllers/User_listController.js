@@ -1,5 +1,7 @@
 const db = require('../../models');
 const Op = db.Sequelize.Op;
+const jwt = require("jsonwebtoken");
+const config = require('../../config/auth.config.json');
 const user_lists = db.user_lists;
 const bcrypt = require("bcrypt");
 
@@ -71,23 +73,22 @@ exports.delete = (req, res) => {
             });
         });
 };
-
 exports.login = (req, res) => {
     const {password, email} = req.body;
 
     user_lists.findOne({
         where: {
             email,
-        },
-        include: [
-            'list_todo'
-        ],
-    }).then(function (user) {
+        }
+    }).then((user) => {
 
-        if (user) {
+            if (!user) {
+                return res.status(404).send({message: 'User Not found.'});
+            }
+
             const passwordIsValid = bcrypt.compareSync(
                 password,
-                user_lists.password
+                user.password
             );
 
             if (!passwordIsValid) {
@@ -96,20 +97,33 @@ exports.login = (req, res) => {
                 });
             }
 
-            res.json(user);
-        } else {
-            res.status(500).send({
-                message: `User not found`
-            })
-        }
+            // const expiresIn = 24 * 60 * 60  // in seconds 24 hours;
+            const expiresIn = 120 * 2  // 2 min
+            const token = jwt.sign({id: user.id}, config.secret, {
+                expiresIn
+            });
 
-        res.end();
-    }).catch(() => {
-        res.status(500).send({
-            message: `User not found`
-        })
-    })
+                res.status(200).send({
+                    user,
+                    token,
+                    expiresIn,
+                });
+            // user.update({token})
+            //     .then((user) => {
+            //         res.status(200).send({
+            //             user,
+            //             expiresIn,
+            //         });
+            //
+            //     })
+            //     .catch((err) => res.status(400).send(err))
+
+        }
+    ).catch((err) => res.status(400).send(err))
+
+
 }
+
 
 exports.register = (req, res) => {
     const {password, email, name} = req.body;
@@ -135,4 +149,25 @@ exports.register = (req, res) => {
             message: `User not found`
         })
     })
+}
+
+exports.logout = (req, res) => {
+    user_lists.findOne({
+        where: {
+            token: req.body.token
+        }
+    }).then(user => {
+
+        user.update({token: null})
+            .then((user) =>
+                res.status(200).send({user})
+            )
+            .catch((err) => res.status(400).send(err));
+
+    }).catch(err => res.status(400).send(err))
+}
+
+
+exports.me = (req, res) => {
+    res.json(res.locals.user);
 }

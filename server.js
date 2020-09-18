@@ -28,7 +28,7 @@ app.all('/*', function (req, res, next) {
     next();
 });
 
-app.use('/user_list', user_lostRouters);
+app.use('/user_lists', user_lostRouters);
 app.use('/todolist', todolist_lostRouters);
 app.get('/', (req, res) => {
     res.json({message: 'Welcome to application.'});

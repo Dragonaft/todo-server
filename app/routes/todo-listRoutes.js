@@ -5,5 +5,6 @@ router.get('/', list_todos.findAll);
 router.get('/one', list_todos.findOne);
 router.post('/', list_todos.create);
 router.delete('/:id', list_todos.delete);
+router.get('/:id', list_todos.findById);
 
 module.exports = router;

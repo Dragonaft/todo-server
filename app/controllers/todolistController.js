@@ -1,6 +1,11 @@
 const db = require('../../models');
 const Op = db.Sequelize.Op;
 const list_todos = db.list_todos;
+const user_lists = db.user_lists;
+
+function checkUser(userListId) {
+    return user_lists.findByPk(userListId);
+}
 
 exports.findAll = (req, res) => {
     list_todos.findAll()
@@ -79,4 +84,16 @@ exports.update = (req, res) => {
             })
             .error(err => handleError(err))
     }
+};
+
+exports.findById = (req, res) => {
+    const id = req.params.id;
+    list_todos.findOne({
+        where: {
+            id
+        },
+    }).then(function (user) {
+        res.json(user);
+        res.end();
+    })
 };

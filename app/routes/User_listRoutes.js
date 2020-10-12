@@ -9,6 +9,7 @@ router.delete('/:id', user_lists.delete);
 router.post('/login', user_lists.login);
 router.post('/register', user_lists.create);
 router.post('/logout', user_lists.logout);
+router.post('/:id',user_lists.update);
 
 router.get('/me', auth, user_lists.me);
 

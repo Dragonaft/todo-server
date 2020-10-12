@@ -37,14 +37,17 @@ exports.findOne = (req, res) => {
 };
 
 exports.create = (req, res) => {
-    console.log(req.body)
+
+
     if (!req.body.description) {
         res.status(400)
         res.json({
             error: 'Bad Data'
         })
     } else {
-        list_todos.create(req.body)
+        const {description, userListId} = req.body
+
+        list_todos.create({description, userListId})
             .then(data => {
                 res.send(data)
             })

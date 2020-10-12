@@ -171,3 +171,24 @@ exports.logout = (req, res) => {
 exports.me = (req, res) => {
     res.json(res.locals.user);
 }
+
+exports.update = (req, res) => {
+    const id = +req.params.id;
+    const {email, name, login} = req.body;
+
+    user_lists.findByPk(id).then( (user) =>
+        user.update({
+            email,
+            name,
+            login,
+        }) .then(function (user) {
+            res.json(user);
+            res.end();
+        }).catch(function (err) {
+            res.status(400).send(err);
+        })
+    ).catch(err => {
+        res.status(400).send('User not found');
+    })
+};
+
